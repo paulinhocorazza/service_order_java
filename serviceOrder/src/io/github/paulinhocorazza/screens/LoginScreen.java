@@ -7,6 +7,7 @@ package io.github.paulinhocorazza.screens;
 
 import java.sql.*;
 import io.github.paulinhocorazza.dal.DatabaseConnection;
+import java.awt.Color;
 import javax.swing.JOptionPane;
 
 /**
@@ -32,21 +33,39 @@ public class LoginScreen extends javax.swing.JFrame {
             rs = pst.executeQuery();
             //se existir usuario e senha correspondente
             if (rs.next()) {
-                MainScreen mainScreen = new MainScreen();
-                mainScreen.setVisible(true);
-            } 
-            else {
+                String profile = rs.getString(6);
+                if (profile.equals("admin")) {
+                    MainScreen mainScreen = new MainScreen();
+                    mainScreen.setVisible(true);
+                    MainScreen.menuReport.setEnabled(true);
+                    MainScreen.menuCadUsuario.setEnabled(true);
+                    MainScreen.lblLoggedUser.setText(rs.getString(2));
+                    MainScreen.lblLoggedUser.setForeground(Color.red);
+                    this.dispose();
+
+                } 
+                else {
+                    MainScreen mainScreen = new MainScreen();
+                    mainScreen.setVisible(true);
+                    MainScreen.lblLoggedUser.setText(rs.getString(2));
+                    MainScreen.lblLoggedUser.setForeground(Color.blue);
+
+                    this.dispose();
+
+                }
+
+            } else {
+
                 JOptionPane.showMessageDialog(null, "Usuario e ou senha invalidos");
                 txtUser.setText("");
                 txtPassword.setText("");
             }
 
-        } 
-        catch (Exception e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, e);
         }
     }
- 
+
     public LoginScreen() {
         initComponents();
         conexao = DatabaseConnection.conector();
@@ -156,7 +175,8 @@ public class LoginScreen extends javax.swing.JFrame {
                 .addGap(90, 90, 90))
         );
 
-        setBounds(0, 0, 550, 368);
+        setSize(new java.awt.Dimension(550, 368));
+        setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
     private void txtUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserActionPerformed
@@ -168,7 +188,7 @@ public class LoginScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_txtPasswordActionPerformed
 
     private void btnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLoginActionPerformed
-        Logar();   
+        Logar();
     }//GEN-LAST:event_btnLoginActionPerformed
 
     public static void main(String args[]) {

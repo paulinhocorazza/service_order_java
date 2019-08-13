@@ -28,6 +28,7 @@ public class DatabaseConnection {
         } catch (Exception e) {
             //tratativa de erro
             System.out.println(e);
+           
 
         }
         return null;
