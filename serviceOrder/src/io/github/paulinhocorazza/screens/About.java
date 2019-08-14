@@ -37,11 +37,11 @@ public class About extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Sobre");
 
-        jLabel1.setText("Sistema para controle de Ordem de servicos.");
+        jLabel1.setText("Sistema para controle de Ordem de serviços.");
 
         jLabel2.setText("Desenbolvido por Paulo Corazza");
 
-        jLabel3.setText("sob a Licenca GPL");
+        jLabel3.setText("sob a Licença GPL");
 
         jLabel5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/iconfinder_gnu_386467.png"))); // NOI18N
 

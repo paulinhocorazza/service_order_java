@@ -56,7 +56,7 @@ public class LoginScreen extends javax.swing.JFrame {
 
             } else {
 
-                JOptionPane.showMessageDialog(null, "Usuario e ou senha invalidos");
+                JOptionPane.showMessageDialog(null, "Usuário e/ou senha inválidos");
                 txtUser.setText("");
                 txtPassword.setText("");
             }
@@ -95,11 +95,11 @@ public class LoginScreen extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(500, 350));
         setResizable(false);
 
-        jLabel2.setText("Usuario:");
+        jLabel2.setText("Usuário:");
 
         jLabel3.setText("Senha:");
 
-        jLabel4.setText("Ordens de Servicos - Login");
+        jLabel4.setText("Ordens de Serviços - Login");
 
         txtUser.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {

@@ -42,13 +42,14 @@ public class MainScreen extends javax.swing.JFrame {
         menuCadUsuario = new javax.swing.JMenuItem();
         menuReport = new javax.swing.JMenu();
         menuServices = new javax.swing.JMenuItem();
-        menuHelp = new javax.swing.JMenu();
-        menuAbout = new javax.swing.JMenuItem();
         menuOptions = new javax.swing.JMenu();
         menuOut = new javax.swing.JMenuItem();
+        menuHelp = new javax.swing.JMenu();
+        menuAbout = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Ordens de servicos - Tela Principal");
+        setBackground(new java.awt.Color(37, 61, 107));
         setFont(new java.awt.Font(".SF NS Text", 1, 18)); // NOI18N
         setPreferredSize(new java.awt.Dimension(915, 650));
         setResizable(false);
@@ -58,14 +59,16 @@ public class MainScreen extends javax.swing.JFrame {
             }
         });
 
-        Desktop.setSize(new java.awt.Dimension(640, 480));
+        Desktop.setPreferredSize(new java.awt.Dimension(915, 650));
 
         jLabel1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/iconfinder_advancedsettings_17814.png"))); // NOI18N
         jLabel1.setPreferredSize(new java.awt.Dimension(200, 200));
 
+        lblLoggedUser.setBackground(java.awt.Color.white);
         lblLoggedUser.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
         lblLoggedUser.setText("Usuario :");
 
+        lblData.setBackground(java.awt.Color.white);
         lblData.setFont(new java.awt.Font("Lucida Grande", 1, 24)); // NOI18N
         lblData.setText("Data: ");
 
@@ -81,7 +84,7 @@ public class MainScreen extends javax.swing.JFrame {
         menuCadastro.add(menuCadCli);
 
         menuCadOs.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.ALT_MASK));
-        menuCadOs.setText("Ordens de Servicos");
+        menuCadOs.setText("Ordens de Serviços");
         menuCadOs.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuCadOsActionPerformed(evt);
@@ -90,7 +93,7 @@ public class MainScreen extends javax.swing.JFrame {
         menuCadastro.add(menuCadOs);
 
         menuCadUsuario.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_U, java.awt.event.InputEvent.ALT_MASK));
-        menuCadUsuario.setText("Usuarios");
+        menuCadUsuario.setText("Usuários");
         menuCadUsuario.setEnabled(false);
         menuCadUsuario.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -101,14 +104,27 @@ public class MainScreen extends javax.swing.JFrame {
 
         Menu.add(menuCadastro);
 
-        menuReport.setText("Relatorio");
+        menuReport.setText("Relatório");
         menuReport.setEnabled(false);
 
         menuServices.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, 0));
-        menuServices.setText("Servicos");
+        menuServices.setText("Serviços");
         menuReport.add(menuServices);
 
         Menu.add(menuReport);
+
+        menuOptions.setText("Opções");
+
+        menuOut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, java.awt.event.InputEvent.ALT_MASK));
+        menuOut.setText("Sair");
+        menuOut.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuOutActionPerformed(evt);
+            }
+        });
+        menuOptions.add(menuOut);
+
+        Menu.add(menuOptions);
 
         menuHelp.setText("Ajuda");
 
@@ -123,19 +139,6 @@ public class MainScreen extends javax.swing.JFrame {
 
         Menu.add(menuHelp);
 
-        menuOptions.setText("Opcoes");
-
-        menuOut.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_ESCAPE, java.awt.event.InputEvent.ALT_MASK));
-        menuOut.setText("Sair");
-        menuOut.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                menuOutActionPerformed(evt);
-            }
-        });
-        menuOptions.add(menuOut);
-
-        Menu.add(menuOptions);
-
         setJMenuBar(Menu);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -143,33 +146,33 @@ public class MainScreen extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(Desktop, javax.swing.GroupLayout.PREFERRED_SIZE, 600, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(Desktop, javax.swing.GroupLayout.PREFERRED_SIZE, 729, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 139, Short.MAX_VALUE)
-                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 105, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(71, 71, 71))
+                        .addGap(93, 93, 93)
+                        .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 109, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addGap(29, 29, 29)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(lblData)
-                            .addComponent(lblLoggedUser))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addComponent(lblLoggedUser))))
+                .addGap(125, 125, 125))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(Desktop)
             .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 264, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(17, 17, 17)
+                .addGap(75, 75, 75)
+                .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(57, 57, 57)
                 .addComponent(lblLoggedUser)
                 .addGap(18, 18, 18)
                 .addComponent(lblData)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addComponent(Desktop, javax.swing.GroupLayout.DEFAULT_SIZE, 608, Short.MAX_VALUE)
         );
 
-        setSize(new java.awt.Dimension(915, 672));
+        setSize(new java.awt.Dimension(1074, 669));
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
 
@@ -182,7 +185,10 @@ public class MainScreen extends javax.swing.JFrame {
     }//GEN-LAST:event_menuCadOsActionPerformed
 
     private void menuCadUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadUsuarioActionPerformed
-        // TODO add your handling code here:
+        //abre o form tela usuário
+        UserScreen userScreen = new UserScreen();
+        userScreen.setVisible(true);
+        Desktop.add(userScreen);
     }//GEN-LAST:event_menuCadUsuarioActionPerformed
 
     private void menuAboutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuAboutActionPerformed

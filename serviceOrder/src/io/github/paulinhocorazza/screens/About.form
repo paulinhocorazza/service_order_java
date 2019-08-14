@@ -85,7 +85,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Sistema para controle de Ordem de servicos."/>
+        <Property name="text" type="java.lang.String" value="Sistema para controle de Ordem de servi&#xe7;os."/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
@@ -95,7 +95,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
-        <Property name="text" type="java.lang.String" value="sob a Licenca GPL"/>
+        <Property name="text" type="java.lang.String" value="sob a Licen&#xe7;a GPL"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel4">
