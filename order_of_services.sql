@@ -22,8 +22,6 @@ ALTER TABLE tb_usuarios MODIFY COLUMN id_usuario INT(6) auto_increment
 --insert dados na tabela
 
 insert into tb_usuarios(usuario,usuario_cargo,login,senha,usuario_perfil) values ( 'Talita Souza' , 'atendente', 'talita.souza', 't@lit4','restrito');
-insert into tb_usuarios(usuario,usuario_fone,login,senha) values ( 'Jose da Silva' , '11 998888888', 'jose.silva', '123456','admin');
-insert into tb_usuarios(usuario,usuario_fone,login,senha,usuario_perfil) values ( 'Moisés Pereira' , '11 99999999', 'moises.pereira', 'moises','restrito');
 
 
 select * from tb_usuarios
@@ -79,6 +77,8 @@ CL.cliente_nome, cliente_fone from tb_os as OS inner join tb_clientes as CL ON (
 
 alter table tb_usuarios add COLUMN usuario_perfil varchar(20) not null
 
+update tb_usuarios set usuario_cargo = 'administrador' where id_usuario =1;
+update tb_usuarios set usuario_cargo = 'técnico' where id_usuario =3;
 update tb_usuarios set usuario_cargo = 'administrador' where id_usuario =1;
  
  alter table tb_usuarios change usuario_fone usuario_cargo varchar(30);
