@@ -13,7 +13,7 @@ CREATE TABLE tb_usuarios(
 
 --comando para descrever tabela
 
-DESCRIBE tb_usuarios
+	DESCRIBE tb_usuarios
 --modifica o tipo da coluna para autoincrement
 ALTER TABLE tb_usuarios MODIFY COLUMN id_usuario INT(6) auto_increment
 
@@ -84,3 +84,14 @@ update tb_usuarios set usuario_cargo = 'administrador' where id_usuario =1;
  alter table tb_usuarios change usuario_fone usuario_cargo varchar(30);
 
 update tb_usuarios set usuario_perfil = 'restrito' where id_usuario = 2;
+
+
+alter table tb_usuarios add COLUMN id int not null;
+
+SELECT * from tb_usuarios
+
+update tb_usuarios set id = 6 where id_usuario = 6;
+
+ALTER TABLE tb_usuarios DROP COLUMN id_usuario;
+
+
