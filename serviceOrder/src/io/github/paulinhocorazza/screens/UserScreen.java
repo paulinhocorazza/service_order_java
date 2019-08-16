@@ -28,17 +28,18 @@ public class UserScreen extends javax.swing.JInternalFrame {
     
     //consultar usuario
     private void readUser(){
-        String sql = "select * from tb_usuarios where id_usuario=?";
+        String sql = "select * from tb_usuarios where id=?";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtIdUser.getText());
             rs = pst.executeQuery();
             if(rs.next()){
                 txtUserName.setText(rs.getString(2));
-                txtUserLogin.setText(rs.getString(4));
-                txtUserPassword.setText(rs.getString(5));
                 comboUserRole.setSelectedItem(rs.getString(3));
-                comboUserProfile.setSelectedItem(rs.getString(6));
+                comboUserProfile.setSelectedItem(rs.getString(4));
+                txtUserLogin.setText(rs.getString(5));
+                txtUserPassword.setText(rs.getString(6));
+                  
             }
             else{
                 JOptionPane.showMessageDialog(null,"Usuario nao cadastrado !");
@@ -48,7 +49,6 @@ public class UserScreen extends javax.swing.JInternalFrame {
                 comboUserRole.setSelectedItem(null);
                 comboUserProfile.setSelectedItem(null);
 
-                
             }
         } 
         catch (Exception e) {
@@ -58,21 +58,22 @@ public class UserScreen extends javax.swing.JInternalFrame {
     //criar usuario
     
     private void createUser(){
-        String sql = "insert into tb_usuarios( id_usuario,usuario, usuario_cargo,login,senha,usuario_perfil) values(?,?,?,?,?,?) ";
+        String sql = "insert into tb_usuarios(id,usuario,usuario_cargo,usuario_perfil,login,senha) values (?,?,?,?,?,?)";
         try {
             pst = conexao.prepareStatement(sql);
-            pst.setInt(1,       );
-            pst.setString(2, txtUserName.getText());
+            pst.setString(1, txtIdUser.getText());
+            pst.setString(2,txtUserName.getText());
             pst.setString(3,comboUserRole.getSelectedItem().toString());
-            pst.setString(4,txtUserLogin.getText());
-            pst.setString(5,txtUserPassword.getText());
-            pst.setString(6,comboUserProfile.getSelectedItem().toString());
+            pst.setString(4,comboUserProfile.getSelectedItem().toString());
+            pst.setString(5,txtUserLogin.getText());
+            pst.setString(6, txtUserPassword.getText());
             //linha abaixo atualiza o banco
             pst.executeUpdate();
+            JOptionPane.showMessageDialog(null,"O usuário foi adicionado com sucesso !");
             
             
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, e);
+            JOptionPane.showMessageDialog(null, "Algo deu errado, erro: " +  e);
         }
        
         
@@ -280,7 +281,7 @@ public class UserScreen extends javax.swing.JInternalFrame {
 
     private void btnCreateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateUserActionPerformed
         // TODO add your handling code here:
-        createUser();
+       createUser();
     }//GEN-LAST:event_btnCreateUserActionPerformed
 
     private void btnEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditUserActionPerformed

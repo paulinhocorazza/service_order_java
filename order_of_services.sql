@@ -3,9 +3,10 @@ create schema db_order_service
 USE db_order_service;
 
 CREATE TABLE tb_usuarios(
-	id_usuario INT PRIMARY KEY,
+	id INT PRIMARY KEY,
 	usuario VARCHAR(50) NOT NULL,
-	usuario_fone VARCHAR(15),
+	usuario_cargo VARCHAR(15),
+    usuario_perfil VARCHAR(15),
 	login VARCHAR(15) NOT NULL UNIQUE,
 	senha VARCHAR(15) NOT NULL
 	
@@ -21,7 +22,7 @@ ALTER TABLE tb_usuarios MODIFY COLUMN id_usuario INT(6) auto_increment
 
 --insert dados na tabela
 
-insert into tb_usuarios(usuario,usuario_cargo,login,senha,usuario_perfil) values ( 'Talita Souza' , 'atendente', 'talita.souza', 't@lit4','restrito');
+insert into tb_usuarios(id,usuario,usuario_cargo,usuario_perfil,login,senha) values (5,'Carla Spina','administrador','admin','carla.spina','admin');
 
 
 select * from tb_usuarios
@@ -49,8 +50,6 @@ insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email
 insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email) values ( 'Pedro Bino' , 'Rua Cilada - Jacare, Cabreuva-sp', '9999-9999', 'pedro@cilada.com.br');
 insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email) values ( 'Moises Francisdo da Silva' , 'Rua Arcoeiro, 256 - Jacare, Cabreuva-sp', '9999-9999', 'moises@santos.com.br');
 insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email) values ( 'Roque Oliveira' , 'Rua Bau Jacare, Cabreuva-sp', '9999-9999', 'roque@baudafelicidade.com.br');
-
-
 
 SELECT * from tb_clientes
 
@@ -88,10 +87,14 @@ update tb_usuarios set usuario_perfil = 'restrito' where id_usuario = 2;
 
 alter table tb_usuarios add COLUMN id int not null;
 
-SELECT * from tb_usuarios
-
-update tb_usuarios set id = 6 where id_usuario = 6;
+update tb_usuarios set id = 2 where login = "jose.silva";
 
 ALTER TABLE tb_usuarios DROP COLUMN id_usuario;
+
+SELECT * from tb_usuarios
+
+drop table tb_usuarios
+
+ALTER TABLE tb_usuarios MODIFY login varchar(30);
 
 
