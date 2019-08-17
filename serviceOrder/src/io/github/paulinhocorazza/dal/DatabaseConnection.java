@@ -16,7 +16,7 @@ public class DatabaseConnection {
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/db_order_service";
         String user = "root";
-        String password = "";
+        String password = "password";
         //fazendo a conexao
 
         try {
