@@ -95,7 +95,7 @@ public class LoginScreen extends javax.swing.JFrame {
         setPreferredSize(new java.awt.Dimension(500, 350));
         setResizable(false);
 
-        jLabel2.setText("Usuário:");
+        jLabel2.setText("Login");
 
         jLabel3.setText("Senha:");
 

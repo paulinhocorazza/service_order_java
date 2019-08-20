@@ -7,13 +7,15 @@ package io.github.paulinhocorazza.screens;
 
 import java.sql.*;
 import io.github.paulinhocorazza.dal.DatabaseConnection;
+import java.awt.Color;
 import javax.swing.JOptionPane;
+
 /**
  *
  * @author paulo.corazza
  */
 public class UserScreen extends javax.swing.JInternalFrame {
-    
+
     Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
@@ -25,71 +27,82 @@ public class UserScreen extends javax.swing.JInternalFrame {
         initComponents();
         conexao = DatabaseConnection.conector();
     }
-    
-    //consultar usuario
-    private void readUser(){
-        String sql = "select * from tb_usuarios where id=?";
-        try {
-            pst = conexao.prepareStatement(sql);
-            pst.setString(1, txtIdUser.getText());
-            rs = pst.executeQuery();
-            if(rs.next()){
-                txtUserName.setText(rs.getString(2));
-                comboUserRole.setSelectedItem(rs.getString(3));
-                comboUserProfile.setSelectedItem(rs.getString(4));
-                txtUserLogin.setText(rs.getString(5));
-                txtUserPassword.setText(rs.getString(6));
-                  
-            }
-            else{
-                JOptionPane.showMessageDialog(null,"Usuario nao cadastrado !");
-                txtUserName.setText("");
-                txtUserLogin.setText("");
-                txtUserPassword.setText("");
-                comboUserRole.setSelectedItem(null);
-                comboUserProfile.setSelectedItem(null);
 
-            }
-        } 
-        catch (Exception e) {
-            JOptionPane.showMessageDialog(null,e);
-        }
-    }
+
     //criar usuario
-    
-    private void createUser(){
+
+    private void createUser() {
         String sql = "insert into tb_usuarios(id,usuario,usuario_cargo,usuario_perfil,login,senha) values (?,?,?,?,?,?)";
         try {
             pst = conexao.prepareStatement(sql);
             pst.setString(1, txtIdUser.getText());
-            pst.setString(2,txtUserName.getText());
-            pst.setString(3,comboUserRole.getSelectedItem().toString());
-            pst.setString(4,comboUserProfile.getSelectedItem().toString());
-            pst.setString(5,txtUserLogin.getText());
+            pst.setString(2, txtUserName.getText());
+            pst.setString(3, comboUserRole.getSelectedItem().toString());
+            pst.setString(4, comboUserProfile.getSelectedItem().toString());
+            pst.setString(5, txtUserLogin.getText());
             pst.setString(6, txtUserPassword.getText());
             //linha abaixo atualiza o banco
             //validacao do banco
-            if(txtIdUser.getText().isEmpty() ||(txtUserName.getText().isEmpty()) || (txtUserLogin.getText().isEmpty()) || (txtUserPassword.getText().isEmpty()) ){
+            if (txtIdUser.getText().isEmpty() || (txtUserName.getText().isEmpty()) || (txtUserLogin.getText().isEmpty()) || (txtUserPassword.getText().isEmpty())) {
+                txtIdUser.setBackground(Color.PINK);
+                txtUserName.setBackground(Color.PINK);
+                txtUserLogin.setBackground(Color.PINK);
+                txtUserPassword.setBackground(Color.PINK);
+
                 JOptionPane.showMessageDialog(null, "Preencha todos os campos !");
-            }
-            else{
-                
-            int addedUser = pst.executeUpdate();
-                if(addedUser > 0 ){
-                    JOptionPane.showMessageDialog(null,"Usuario cadastrado com sucesso !");
+            } else {
+
+                int addedUser = pst.executeUpdate();
+                if (addedUser > 0) {
+                    JOptionPane.showMessageDialog(null, "Usuario cadastrado com sucesso !");
                     txtIdUser.setText("");
                     txtUserName.setText("");
                     txtUserLogin.setText("");
                     txtUserPassword.setText("");
                     comboUserRole.setSelectedItem(null);
                     comboUserProfile.setSelectedItem(null);
-                }   
+                   
+                }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Algo deu errado, erro: " +  e);
+            JOptionPane.showMessageDialog(null, "Algo deu errado, erro: " + e);
         }
-       
-        
+
+    }
+        //consultar usuario
+    private void readUser() {
+        String sql = "select * from tb_usuarios where id=?";
+        try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1, txtIdUser.getText());
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                txtUserName.setText(rs.getString(2));
+                comboUserRole.setSelectedItem(rs.getString(3));
+                comboUserProfile.setSelectedItem(rs.getString(4));
+                txtUserLogin.setText(rs.getString(5));
+                txtUserPassword.setText(rs.getString(6));
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Usuario nao cadastrado !");
+                txtUserName.setText("");
+                txtUserLogin.setText("");
+                txtUserPassword.setText("");
+                comboUserRole.setSelectedItem(null);
+                comboUserProfile.setSelectedItem(null);
+                 txtIdUser.setBackground(Color.WHITE);
+                txtUserName.setBackground(Color.WHITE);
+                txtUserLogin.setBackground(Color.WHITE);
+                txtUserPassword.setBackground(Color.WHITE);
+
+            }
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, e);
+        }
+    }
+    
+    private void upadateUser(){
+        String sql = "update tb_usuarios set ";
     }
 
     /**
@@ -98,8 +111,8 @@ public class UserScreen extends javax.swing.JInternalFrame {
      * regenerated by the Form Editor.
      */
     @SuppressWarnings("unchecked")
-    
-    
+
+
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
@@ -486,7 +499,7 @@ public class UserScreen extends javax.swing.JInternalFrame {
 
     private void btnCreateUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateUserActionPerformed
         // TODO add your handling code here:
-       createUser();
+        createUser();
     }//GEN-LAST:event_btnCreateUserActionPerformed
 
     private void btnEditUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditUserActionPerformed

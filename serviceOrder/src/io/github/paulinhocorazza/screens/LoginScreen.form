@@ -99,7 +99,7 @@
   <SubComponents>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Usu&#xe1;rio:"/>
+        <Property name="text" type="java.lang.String" value="Login"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
