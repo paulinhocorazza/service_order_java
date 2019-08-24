@@ -129,44 +129,38 @@ public class UserScreen extends javax.swing.JInternalFrame {
             JOptionPane.showMessageDialog(null, "Erro:" + e);
         }
     }
-    
-    //delete user
-    public void deleteUser(){
-            
-            int accept = JOptionPane.showConfirmDialog(null,"Tem certeza que deseja excluir o usuario " + txtUserName.getText() + " ?", "Atencao",JOptionPane.YES_NO_OPTION);
-                if (accept == JOptionPane.YES_OPTION) {
-                    String sql = "delete from tb_usuarios where id=?";
-                    
-                    try {
-                        pst = conexao.prepareStatement(sql);
-                        pst.setString(1, txtIdUser.getText());  
-                        int deleted = pst.executeUpdate();
-                        
-                            if (deleted > 0) {
-                                JOptionPane.showMessageDialog(null, "O usuario " + txtUserName.getText() + "foi removido com sucesso !");
-                                txtIdUser.setText("");
-                                txtUserName.setText("");
-                                txtUserLogin.setText("");
-                                txtUserPassword.setText("");
-                                comboUserRole.setSelectedItem(null);
-                                comboUserProfile.setSelectedItem(null);
 
-                            
-                        }
-                        
-                        
-                        
-                    } catch (Exception e) {
-                        JOptionPane.showMessageDialog(null, "Erro: " + e);
-                    }
+    //delete user
+    public void deleteUser() {
+
+        int accept = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja excluir o usuario " + txtUserName.getText() + " ?", "Atencao", JOptionPane.YES_NO_OPTION);
+        if (accept == JOptionPane.YES_OPTION) {
+            String sql = "delete from tb_usuarios where id=?";
+
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtIdUser.getText());
+                int deleted = pst.executeUpdate();
+
+                if (deleted > 0) {
+                    JOptionPane.showMessageDialog(null, "O usuario " + txtUserName.getText() + "foi removido com sucesso !");
+                    txtIdUser.setText("");
+                    txtUserName.setText("");
+                    txtUserLogin.setText("");
+                    txtUserPassword.setText("");
+                    comboUserRole.setSelectedItem(null);
+                    comboUserProfile.setSelectedItem(null);
+
                 }
-                else {
-                    JOptionPane.showMessageDialog(null,"Operação Cancelada");
-                }
-            
-            
+
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro: " + e);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Operação Cancelada");
         }
 
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.

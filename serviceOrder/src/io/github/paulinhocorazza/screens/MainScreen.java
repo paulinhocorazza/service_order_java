@@ -76,7 +76,7 @@ public class MainScreen extends javax.swing.JFrame {
         menuCadastro.setText("Cadastro");
 
         menuCadCli.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.ALT_MASK));
-        menuCadCli.setText("Cliente");
+        menuCadCli.setText("Clientes");
         menuCadCli.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 menuCadCliActionPerformed(evt);
@@ -179,6 +179,9 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void menuCadCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadCliActionPerformed
         // TODO add your handling code here:
+        ClientScreen clientScreen = new ClientScreen();
+        clientScreen.setVisible(true);
+        Desktop.add(clientScreen);
     }//GEN-LAST:event_menuCadCliActionPerformed
 
     private void menuCadOsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadOsActionPerformed
