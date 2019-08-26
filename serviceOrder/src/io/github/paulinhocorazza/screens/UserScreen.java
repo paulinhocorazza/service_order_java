@@ -41,14 +41,19 @@ public class UserScreen extends javax.swing.JInternalFrame {
             pst.setString(6, txtUserPassword.getText());
             //linha abaixo atualiza o banco
             //validacao do banco
-            if (txtIdUser.getText().isEmpty() || (txtUserName.getText().isEmpty()) || (txtUserLogin.getText().isEmpty()) || (txtUserPassword.getText().isEmpty())) {
-                txtIdUser.setBackground(Color.PINK);
-                txtUserName.setBackground(Color.PINK);
-                txtUserLogin.setBackground(Color.PINK);
-                txtUserPassword.setBackground(Color.PINK);
-
-                JOptionPane.showMessageDialog(null, "Preencha todos os campos !");
-            } else {
+            if(txtIdUser.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null, "Preencha o campo ID !");
+            }
+            if(txtUserName.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null,"Preencha o campo Nome !");
+            }
+            if(txtUserLogin.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null, "Preencha o campo Login !");
+            }
+            if(txtUserPassword.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null,"Preencha o campo senha !");
+            }
+            else {
 
                 int addedUser = pst.executeUpdate();
                 if (addedUser > 0) {

@@ -51,7 +51,7 @@ insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email
 insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email) values ( 'Moises Francisdo da Silva' , 'Rua Arcoeiro, 256 - Jacare, Cabreuva-sp', '9999-9999', 'moises@santos.com.br');
 insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email) values ( 'Roque Oliveira' , 'Rua Bau Jacare, Cabreuva-sp', '9999-9999', 'roque@baudafelicidade.com.br');
 
-SELECT * from tb_clientes
+SELECT * from tb_clientes where cliente_nome like 'P%'
 
 CREATE table tb_os(
 	id_os int PRIMARY key AUTO_INCREMENT,
