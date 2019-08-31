@@ -39,7 +39,6 @@ public class ClientScreen extends javax.swing.JInternalFrame {
             pst.setString(2, txtClientAddress.getText());
             pst.setString(3, txtClientPhoneNumber.getText());
             pst.setString(4, txtClientEmail.getText());
-        
 
             if (txtClientName.getText().isEmpty() || txtClientAddress.getText().isEmpty() || txtClientPhoneNumber.getText().isEmpty()) {
 
@@ -62,8 +61,8 @@ public class ClientScreen extends javax.swing.JInternalFrame {
         }
 
     }
-    
-    public void updateClient(){
+
+    public void updateClient() {
         String sql = "update tb_clientes set cliente_nome=?, cliente_endereco=?, cliente_fone=?, cliente_email=? where id_cliente=?";
         try {
             pst = conexao.prepareStatement(sql);
@@ -72,28 +71,52 @@ public class ClientScreen extends javax.swing.JInternalFrame {
             pst.setString(3, txtClientPhoneNumber.getText());
             pst.setString(4, txtClientEmail.getText());
             pst.setString(5, txtClientId.getText());
-            
-            
+
             if (txtClientName.getText().isEmpty() || txtClientAddress.getText().isEmpty() || txtClientPhoneNumber.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatorios !");
-                
-            }
-            else{
-               int updatedClient = pst.executeUpdate();
-               if(updatedClient > 0){
-                   JOptionPane.showMessageDialog(null, "Cliente alterado com sucesso !");
-                   txtClientName.setText("");
-                   txtClientAddress.setText("");
-                   txtClientPhoneNumber.setText("");
-                   txtClientEmail.setText("");
-               }
+
+            } else {
+                int updatedClient = pst.executeUpdate();
+                if (updatedClient > 0) {
+                    JOptionPane.showMessageDialog(null, "Cliente alterado com sucesso !");
+                    txtClientName.setText("");
+                    txtClientAddress.setText("");
+                    txtClientPhoneNumber.setText("");
+                    txtClientEmail.setText("");
+                    btnCreateClient.setEnabled(true);
+                }
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(null, "Erro: " + e );
-            
+            JOptionPane.showMessageDialog(null, "Erro: " + e);
+
         }
     }
-    
+
+    public void deleteClient() {
+
+        int accept = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja deletar o cliente " + txtClientName.getText() + " ?");
+        if (accept == JOptionPane.YES_OPTION) {
+            String sql = "delete from tb_clientes  where id_cliente=?";
+            try {
+                pst = conexao.prepareStatement(sql);
+                pst.setString(1, txtClientId.getText());
+                int deleted = pst.executeUpdate();
+                if(deleted > 0){
+                    JOptionPane.showMessageDialog(null, "Cliente removido com sucesso !");
+                    txtClientName.setText("");
+                    txtClientAddress.setText("");
+                    txtClientPhoneNumber.setText("");
+                    txtClientEmail.setText("");
+                    btnCreateClient.setEnabled(true);
+                    
+                }
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(null, "Erro: " + e);
+            }
+        }
+
+    }
+
     public void searchClient() {
         String sql = "select * from tb_clientes where cliente_nome like ?";
         try {
@@ -101,27 +124,24 @@ public class ClientScreen extends javax.swing.JInternalFrame {
             pst.setString(1, txtClientSearch.getText() + "%");
             rs = pst.executeQuery();
             tblClient.setModel(DbUtils.resultSetToTableModel(rs));
-            
 
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro: " + e);
         }
 
     }
-        
-     public void setFieldsFromTable(){
+
+    public void setFieldsFromTable() {
         int set = tblClient.getSelectedRow();
-        txtClientId.setText(tblClient.getModel().getValueAt(set,0).toString());
-        txtClientName.setText(tblClient.getModel().getValueAt(set,1).toString());
-        txtClientAddress.setText(tblClient.getModel().getValueAt(set,2).toString());
-        txtClientPhoneNumber.setText(tblClient.getModel().getValueAt(set,3).toString());
-        txtClientEmail.setText(tblClient.getModel().getValueAt(set,4).toString());
+        txtClientId.setText(tblClient.getModel().getValueAt(set, 0).toString());
+        txtClientName.setText(tblClient.getModel().getValueAt(set, 1).toString());
+        txtClientAddress.setText(tblClient.getModel().getValueAt(set, 2).toString());
+        txtClientPhoneNumber.setText(tblClient.getModel().getValueAt(set, 3).toString());
+        txtClientEmail.setText(tblClient.getModel().getValueAt(set, 4).toString());
+        btnCreateClient.setEnabled(false);
         //txtClientName.setEditable(false);
-        
+
     }
-
-   
-
 
     @SuppressWarnings("unchecked")
 
@@ -134,7 +154,7 @@ public class ClientScreen extends javax.swing.JInternalFrame {
         jLabel6 = new javax.swing.JLabel();
         txtClientAddress = new javax.swing.JTextField();
         btnCreateClient = new javax.swing.JButton();
-        btnDeleteUser = new javax.swing.JButton();
+        btnDeleteClient = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtClientSearch = new javax.swing.JTextField();
         jInternalFrame1 = new javax.swing.JInternalFrame();
@@ -194,11 +214,11 @@ public class ClientScreen extends javax.swing.JInternalFrame {
             }
         });
 
-        btnDeleteUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/delete.png"))); // NOI18N
-        btnDeleteUser.setToolTipText("Excluir Usuário");
-        btnDeleteUser.addActionListener(new java.awt.event.ActionListener() {
+        btnDeleteClient.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/delete.png"))); // NOI18N
+        btnDeleteClient.setToolTipText("Excluir Usuário");
+        btnDeleteClient.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnDeleteUserActionPerformed(evt);
+                btnDeleteClientActionPerformed(evt);
             }
         });
 
@@ -456,7 +476,7 @@ public class ClientScreen extends javax.swing.JInternalFrame {
                         .addGap(90, 90, 90)
                         .addComponent(btnUpdateClient, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(88, 88, 88)
-                        .addComponent(btnDeleteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btnDeleteClient, javax.swing.GroupLayout.PREFERRED_SIZE, 142, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(61, Short.MAX_VALUE))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
@@ -497,7 +517,7 @@ public class ClientScreen extends javax.swing.JInternalFrame {
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnDeleteUser, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnDeleteClient, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnCreateClient, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnUpdateClient, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(35, 35, 35))
@@ -520,10 +540,10 @@ public class ClientScreen extends javax.swing.JInternalFrame {
         createClient();
     }//GEN-LAST:event_btnCreateClientActionPerformed
 
-    private void btnDeleteUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteUserActionPerformed
+    private void btnDeleteClientActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteClientActionPerformed
         // TODO add your handling code here:
-        //deleteUser();
-    }//GEN-LAST:event_btnDeleteUserActionPerformed
+        deleteClient();
+    }//GEN-LAST:event_btnDeleteClientActionPerformed
 
     private void txtUserName1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtUserName1ActionPerformed
         // TODO add your handling code here:
@@ -572,14 +592,14 @@ public class ClientScreen extends javax.swing.JInternalFrame {
 
     private void iconMagnifyingGlassMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_iconMagnifyingGlassMouseClicked
         // TODO add your handling code here:
-       // searchClient();
+        // searchClient();
     }//GEN-LAST:event_iconMagnifyingGlassMouseClicked
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCreateClient;
     private javax.swing.JButton btnCreateUser1;
-    private javax.swing.JButton btnDeleteUser;
+    private javax.swing.JButton btnDeleteClient;
     private javax.swing.JButton btnDeleteUser1;
     private javax.swing.JButton btnEditUser1;
     private javax.swing.JButton btnReadUser1;

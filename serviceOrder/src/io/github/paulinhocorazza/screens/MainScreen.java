@@ -186,6 +186,9 @@ public class MainScreen extends javax.swing.JFrame {
 
     private void menuCadOsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadOsActionPerformed
         // TODO add your handling code here:
+        ServiceOrderScreen serviceOrderScreen = new ServiceOrderScreen();
+        serviceOrderScreen.setVisible(true);
+        Desktop.add(serviceOrderScreen);
     }//GEN-LAST:event_menuCadOsActionPerformed
 
     private void menuCadUsuarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCadUsuarioActionPerformed
