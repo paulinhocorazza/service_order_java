@@ -21,6 +21,9 @@
     <SyntheticProperty name="generatePosition" type="boolean" value="true"/>
     <SyntheticProperty name="generateSize" type="boolean" value="true"/>
   </SyntheticProperties>
+  <Events>
+    <EventHandler event="internalFrameOpened" listener="javax.swing.event.InternalFrameListener" parameters="javax.swing.event.InternalFrameEvent" handler="formInternalFrameOpened"/>
+  </Events>
   <AuxValues>
     <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
@@ -68,10 +71,10 @@
                                   </Group>
                                   <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace max="32767" attributes="0"/>
-                              <Component id="clientPanel" min="-2" max="-2" attributes="0"/>
+                              <EmptySpace type="separate" max="-2" attributes="0"/>
+                              <Component id="clientPanel" max="32767" attributes="0"/>
                           </Group>
-                          <Group type="102" alignment="0" attributes="0">
+                          <Group type="102" attributes="0">
                               <Group type="103" groupAlignment="0" attributes="0">
                                   <Component id="jLabel4" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jLabel6" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -90,7 +93,7 @@
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
                                       <Component id="jLabel9" min="-2" max="-2" attributes="0"/>
                                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                                      <Component id="jTextField3" max="32767" attributes="0"/>
+                                      <Component id="txtOsValue" max="32767" attributes="0"/>
                                   </Group>
                                   <Component id="txtServiceName" max="32767" attributes="0"/>
                                   <Component id="txtIssueName" max="32767" attributes="0"/>
@@ -139,7 +142,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="103" groupAlignment="3" attributes="0">
                       <Component id="jLabel9" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="jTextField3" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtOsValue" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtTechnicianName" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
                   <Component id="jLabel8" alignment="0" min="-2" max="-2" attributes="0"/>
@@ -248,6 +251,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Ordem de servi&#xe7;o"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="serviceOrderRadioActionPerformed"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JRadioButton" name="tenderRadio">
           <Properties>
@@ -256,6 +262,9 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Or&#xe7;amento"/>
           </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="tenderRadioActionPerformed"/>
+          </Events>
         </Component>
       </SubComponents>
     </Container>
@@ -268,11 +277,11 @@
       <Properties>
         <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
           <StringArray count="7">
-            <StringItem index="0" value="Entrega OK"/>
-            <StringItem index="1" value="Or&#xe7;amento Reprovado"/>
-            <StringItem index="2" value="Aguardando Pe&#xe7;as"/>
-            <StringItem index="3" value="Abandonado pelo Cliente"/>
-            <StringItem index="4" value="Na bancada"/>
+            <StringItem index="0" value="Na bancada"/>
+            <StringItem index="1" value="Entrega OK"/>
+            <StringItem index="2" value="Or&#xe7;amento Reprovado"/>
+            <StringItem index="3" value="Aguardando Pe&#xe7;as"/>
+            <StringItem index="4" value="Abandonado pelo Cliente"/>
             <StringItem index="5" value="Retornou"/>
             <StringItem index="6" value="Aguardando Retirada"/>
           </StringArray>
@@ -299,14 +308,14 @@
                   <Group type="103" groupAlignment="1" max="-2" attributes="0">
                       <Component id="jScrollPane1" pref="0" max="32767" attributes="0"/>
                       <Group type="102" attributes="0">
-                          <Component id="txtClient" min="-2" pref="222" max="-2" attributes="0"/>
+                          <Component id="txtClientSearch" min="-2" pref="222" max="-2" attributes="0"/>
                           <EmptySpace type="unrelated" max="-2" attributes="0"/>
                           <Component id="jLabel5" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtIdClient" min="-2" pref="48" max="-2" attributes="0"/>
+                          <Component id="txtIdClient" pref="86" max="32767" attributes="0"/>
                       </Group>
                   </Group>
-                  <EmptySpace pref="14" max="32767" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
               </Group>
           </Group>
         </DimensionLayout>
@@ -315,7 +324,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <EmptySpace min="-2" pref="15" max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtClient" alignment="3" min="-2" max="-2" attributes="0"/>
+                      <Component id="txtClientSearch" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="jLabel5" alignment="3" min="-2" max="-2" attributes="0"/>
                       <Component id="txtIdClient" alignment="3" min="-2" max="-2" attributes="0"/>
                   </Group>
@@ -327,14 +336,20 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JTextField" name="txtClient">
+        <Component class="javax.swing.JTextField" name="txtClientSearch">
+          <Events>
+            <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtClientSearchKeyReleased"/>
+          </Events>
         </Component>
         <Component class="javax.swing.JLabel" name="jLabel5">
           <Properties>
-            <Property name="text" type="java.lang.String" value="id:"/>
+            <Property name="text" type="java.lang.String" value="*id:"/>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtIdClient">
+          <Properties>
+            <Property name="enabled" type="boolean" value="false"/>
+          </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane1">
           <AuxValues>
@@ -343,7 +358,7 @@
 
           <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
           <SubComponents>
-            <Component class="javax.swing.JTable" name="jTable1">
+            <Component class="javax.swing.JTable" name="tblClients">
               <Properties>
                 <Property name="model" type="javax.swing.table.TableModel" editor="org.netbeans.modules.form.editors2.TableModelEditor">
                   <Table columnCount="3" rowCount="4">
@@ -353,6 +368,9 @@
                   </Table>
                 </Property>
               </Properties>
+              <Events>
+                <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="tblClientsMouseClicked"/>
+              </Events>
             </Component>
           </SubComponents>
         </Container>
@@ -363,7 +381,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/io/github/paulinhocorazza/icons/create.png"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" value="Adicionar Usu&#xe1;rio"/>
+        <Property name="toolTipText" type="java.lang.String" value="Adicionar Ordem de Servi&#xe7;o"/>
         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
           <Color id="Default Cursor"/>
         </Property>
@@ -380,7 +398,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/io/github/paulinhocorazza/icons/read.png"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" value="Consultar Usu&#xe1;rio"/>
+        <Property name="toolTipText" type="java.lang.String" value="Consultar Ordem de Servi&#xe7;o"/>
         <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[80, 80]"/>
         </Property>
@@ -394,7 +412,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/io/github/paulinhocorazza/icons/update.png"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" value="Editar Usu&#xe1;rio"/>
+        <Property name="toolTipText" type="java.lang.String" value="Editar Ordem de Servi&#xe7;o"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnUpdateServiceOrderActionPerformed"/>
@@ -405,7 +423,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/io/github/paulinhocorazza/icons/delete.png"/>
         </Property>
-        <Property name="toolTipText" type="java.lang.String" value="Excluir Usu&#xe1;rio"/>
+        <Property name="toolTipText" type="java.lang.String" value="Excluir Ordem de Servi&#xe7;o"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnDeleteServiceOrderActionPerformed"/>
@@ -457,7 +475,7 @@
         <Property name="text" type="java.lang.String" value="Valor Total:"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JTextField" name="jTextField3">
+    <Component class="javax.swing.JTextField" name="txtOsValue">
     </Component>
     <Component class="javax.swing.JTextField" name="txtTechnicianName">
     </Component>

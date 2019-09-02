@@ -5,19 +5,91 @@
  */
 package io.github.paulinhocorazza.screens;
 
+import java.sql.*;
+import io.github.paulinhocorazza.dal.DatabaseConnection;
+import javafx.scene.control.RadioButton;
+import javax.swing.JOptionPane;
+import javax.swing.text.MaskFormatter;
+import net.proteanit.sql.DbUtils;
+
+
 /**
  *
  * @author pauloviniciusbarbosacorazza
  */
 public class ServiceOrderScreen extends javax.swing.JInternalFrame {
+    
+    Connection  conexao = null;
+    PreparedStatement pst = null;
+    ResultSet rs = null;
+    //radio button
+    
+    private String tipo;
+    MaskFormatter maskData = new MaskFormatter("R$");
+    
+    
 
     /**
      * Creates new form ServiceOrderScreen
      */
     public ServiceOrderScreen() {
         initComponents();
+        conexao = DatabaseConnection.conector();
     }
-
+    
+    private void searchClient(){
+         String sql = "select id_cliente as ID,cliente_nome as NOME, cliente_fone as FONE from tb_clientes where cliente_nome like ?";
+         try {
+            pst = conexao.prepareStatement(sql);
+            pst.setString(1,txtClientSearch.getText() + "%");
+            rs = pst.executeQuery();
+            tblClients.setModel(DbUtils.resultSetToTableModel(rs));
+            
+        } catch (Exception e) {
+             JOptionPane.showMessageDialog(null, "Erro: " + e);
+        }
+    
+    }
+    
+    private void setFieldsFromTable(){
+        int set = tblClients.getSelectedRow();
+        txtIdClient.setText(tblClients.getModel().getValueAt(set,0).toString());
+        
+    }
+    
+    private void createrServiceOrder(){
+        String sql = "insert into tb_os (tipo,status,os_equipamento,os_defeito,os_servico,os_tecnico,os_valor,id_cliente) values (?,?,?,?,?,?,?,?)";
+        try {
+            pst = conexao.prepareCall(sql);
+            pst.setString(1,tipo);
+            pst.setString(2,situationCombo.getSelectedItem().toString());
+            pst.setString(3,txtEquipmentName.getText());
+            pst.setString(4,txtIssueName.getText());
+            pst.setString(5, txtServiceName.getText());
+            pst.setString(6, txtTechnicianName.getText());
+            pst.setString(7, txtOsValue.getText());
+            pst.setString(8,txtIdClient.getText());
+            
+            if(txtIdClient.getText().isEmpty() || txtEquipmentName.getText().isEmpty() || txtIssueName.getText().isEmpty()){
+                JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatorios !");
+            }
+            else{
+                int addedServiceOrder = pst.executeUpdate();
+                if(addedServiceOrder > 0 ){
+                    JOptionPane.showMessageDialog(null, "Ordem de servico emitida com sucesso !");
+                    txtIdClient.setText(null);
+                    txtEquipmentName.setText(null);
+                    txtIssueName.setText(null);
+                    txtServiceName.setText(null);
+                    txtTechnicianName.setText(null);
+                    txtOsValue.setText(null);
+                }
+            }
+            
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro : " + e);
+        }
+    }
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -38,11 +110,11 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         jLabel3 = new javax.swing.JLabel();
         situationCombo = new javax.swing.JComboBox<>();
         clientPanel = new javax.swing.JPanel();
-        txtClient = new javax.swing.JTextField();
+        txtClientSearch = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
         txtIdClient = new javax.swing.JTextField();
         jScrollPane1 = new javax.swing.JScrollPane();
-        jTable1 = new javax.swing.JTable();
+        tblClients = new javax.swing.JTable();
         btnCreateServiceOrder = new javax.swing.JButton();
         btnReadServiceOrder = new javax.swing.JButton();
         btnUpdateServiceOrder = new javax.swing.JButton();
@@ -57,7 +129,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         txtServiceName = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
-        jTextField3 = new javax.swing.JTextField();
+        txtOsValue = new javax.swing.JTextField();
         txtTechnicianName = new javax.swing.JTextField();
 
         setClosable(true);
@@ -65,6 +137,23 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         setMaximizable(true);
         setTitle("Ordens de Serviços");
         setPreferredSize(new java.awt.Dimension(915, 650));
+        addInternalFrameListener(new javax.swing.event.InternalFrameListener() {
+            public void internalFrameOpened(javax.swing.event.InternalFrameEvent evt) {
+                formInternalFrameOpened(evt);
+            }
+            public void internalFrameClosing(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameClosed(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameIconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeiconified(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameActivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+            public void internalFrameDeactivated(javax.swing.event.InternalFrameEvent evt) {
+            }
+        });
 
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Ordens de Serviços"));
 
@@ -78,9 +167,19 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
 
         buttonGroup1.add(serviceOrderRadio);
         serviceOrderRadio.setText("Ordem de serviço");
+        serviceOrderRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                serviceOrderRadioActionPerformed(evt);
+            }
+        });
 
         buttonGroup1.add(tenderRadio);
         tenderRadio.setText("Orçamento");
+        tenderRadio.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tenderRadioActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -124,13 +223,21 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Situação:");
 
-        situationCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Entrega OK", "Orçamento Reprovado", "Aguardando Peças", "Abandonado pelo Cliente", "Na bancada", "Retornou", "Aguardando Retirada" }));
+        situationCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Na bancada", "Entrega OK", "Orçamento Reprovado", "Aguardando Peças", "Abandonado pelo Cliente", "Retornou", "Aguardando Retirada" }));
 
         clientPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Clientes"));
 
-        jLabel5.setText("id:");
+        txtClientSearch.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtClientSearchKeyReleased(evt);
+            }
+        });
 
-        jTable1.setModel(new javax.swing.table.DefaultTableModel(
+        jLabel5.setText("*id:");
+
+        txtIdClient.setEnabled(false);
+
+        tblClients.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null},
                 {null, null, null},
@@ -141,7 +248,12 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                 "ID", "Nome", "Telefone"
             }
         ));
-        jScrollPane1.setViewportView(jTable1);
+        tblClients.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblClientsMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblClients);
 
         javax.swing.GroupLayout clientPanelLayout = new javax.swing.GroupLayout(clientPanel);
         clientPanel.setLayout(clientPanelLayout);
@@ -152,19 +264,19 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                 .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
                     .addGroup(clientPanelLayout.createSequentialGroup()
-                        .addComponent(txtClient, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtClientSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIdClient, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(14, Short.MAX_VALUE))
+                        .addComponent(txtIdClient, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         clientPanelLayout.setVerticalGroup(
             clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(clientPanelLayout.createSequentialGroup()
                 .addGap(15, 15, 15)
                 .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtClientSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(txtIdClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -173,7 +285,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         );
 
         btnCreateServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/create.png"))); // NOI18N
-        btnCreateServiceOrder.setToolTipText("Adicionar Usuário");
+        btnCreateServiceOrder.setToolTipText("Adicionar Ordem de Serviço");
         btnCreateServiceOrder.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnCreateServiceOrder.setPreferredSize(new java.awt.Dimension(80, 80));
         btnCreateServiceOrder.addActionListener(new java.awt.event.ActionListener() {
@@ -183,7 +295,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         });
 
         btnReadServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/read.png"))); // NOI18N
-        btnReadServiceOrder.setToolTipText("Consultar Usuário");
+        btnReadServiceOrder.setToolTipText("Consultar Ordem de Serviço");
         btnReadServiceOrder.setPreferredSize(new java.awt.Dimension(80, 80));
         btnReadServiceOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -192,7 +304,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         });
 
         btnUpdateServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/update.png"))); // NOI18N
-        btnUpdateServiceOrder.setToolTipText("Editar Usuário");
+        btnUpdateServiceOrder.setToolTipText("Editar Ordem de Serviço");
         btnUpdateServiceOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateServiceOrderActionPerformed(evt);
@@ -200,7 +312,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         });
 
         btnDeleteServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/delete.png"))); // NOI18N
-        btnDeleteServiceOrder.setToolTipText("Excluir Usuário");
+        btnDeleteServiceOrder.setToolTipText("Excluir Ordem de Serviço");
         btnDeleteServiceOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnDeleteServiceOrderActionPerformed(evt);
@@ -254,8 +366,8 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                         .addComponent(situationCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                                     .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(clientPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(clientPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addGroup(layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(jLabel4)
@@ -272,7 +384,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(jLabel9)
                                         .addGap(18, 18, 18)
-                                        .addComponent(jTextField3))
+                                        .addComponent(txtOsValue))
                                     .addComponent(txtServiceName)
                                     .addComponent(txtIssueName)
                                     .addComponent(txtEquipmentName))))
@@ -307,7 +419,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel9)
-                        .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtOsValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtTechnicianName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel8))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
@@ -327,7 +439,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
 
     private void btnCreateServiceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCreateServiceOrderActionPerformed
         // TODO add your handling code here:
-        //createUser();
+        createrServiceOrder();
     }//GEN-LAST:event_btnCreateServiceOrderActionPerformed
 
     private void btnReadServiceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadServiceOrderActionPerformed
@@ -343,6 +455,34 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
     private void btnDeleteServiceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteServiceOrderActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_btnDeleteServiceOrderActionPerformed
+
+    private void txtClientSearchKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtClientSearchKeyReleased
+        // TODO add your handling code here:
+        searchClient();
+    }//GEN-LAST:event_txtClientSearchKeyReleased
+
+    private void tblClientsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClientsMouseClicked
+        // TODO add your handling code here:
+        setFieldsFromTable();
+    }//GEN-LAST:event_tblClientsMouseClicked
+
+    private void serviceOrderRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceOrderRadioActionPerformed
+        // TODO add your handling code here:
+        tipo = "Ordem de Serviço";
+        
+    }//GEN-LAST:event_serviceOrderRadioActionPerformed
+
+    private void tenderRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tenderRadioActionPerformed
+        // TODO add your handling code here:
+        tipo = "Orçamento";
+    }//GEN-LAST:event_tenderRadioActionPerformed
+
+    private void formInternalFrameOpened(javax.swing.event.InternalFrameEvent evt) {//GEN-FIRST:event_formInternalFrameOpened
+        // TODO add your handling code here:
+        //ao abrir o form marcar o radioButton orcamento
+        tenderRadio.setSelected(true);
+        tipo = "Orçamento";
+    }//GEN-LAST:event_formInternalFrameOpened
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -365,17 +505,17 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTable jTable1;
     private javax.swing.JTextField jTextField1;
     private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
     private javax.swing.JRadioButton serviceOrderRadio;
     private javax.swing.JComboBox<String> situationCombo;
+    private javax.swing.JTable tblClients;
     private javax.swing.JRadioButton tenderRadio;
-    private javax.swing.JTextField txtClient;
+    private javax.swing.JTextField txtClientSearch;
     private javax.swing.JTextField txtEquipmentName;
     private javax.swing.JTextField txtIdClient;
     private javax.swing.JTextField txtIssueName;
+    private javax.swing.JTextField txtOsValue;
     private javax.swing.JTextField txtServiceName;
     private javax.swing.JTextField txtTechnicianName;
     // End of variables declaration//GEN-END:variables

@@ -51,7 +51,10 @@ insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email
 insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email) values ( 'Moises Francisdo da Silva' , 'Rua Arcoeiro, 256 - Jacare, Cabreuva-sp', '9999-9999', 'moises@santos.com.br');
 insert into tb_clientes(cliente_nome,cliente_endereco,cliente_fone,cliente_email) values ( 'Roque Oliveira' , 'Rua Bau Jacare, Cabreuva-sp', '9999-9999', 'roque@baudafelicidade.com.br');
 
+DESCRIBE tb_clientes
 SELECT * from tb_clientes where cliente_nome like 'P%'
+
+select id_cliente as ID,cliente_nome as NOME, cliente_fone as FONE,cliente_email as EMAIL from db_order_service.tb_clientes  where cliente_nome like 'Mo%'
 
 CREATE table tb_os(
 	id_os int PRIMARY key AUTO_INCREMENT,
@@ -97,4 +100,11 @@ drop table tb_usuarios
 
 ALTER TABLE tb_usuarios MODIFY login varchar(30);
 
+
+describe db_order_service.tb_os
+alter table db_order_service.tb_os add tipo varchar(15) not null after os_data;
+alter table db_order_service.tb_os add status varchar(20) not null after tipo
+ALTER TABLE db_order_service.tb_os MODIFY tipo varchar(30);
+
+select * from db_order_service.tb_os
 
