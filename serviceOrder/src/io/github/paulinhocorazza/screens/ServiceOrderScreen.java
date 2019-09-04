@@ -7,27 +7,24 @@ package io.github.paulinhocorazza.screens;
 
 import java.sql.*;
 import io.github.paulinhocorazza.dal.DatabaseConnection;
+import java.util.Locale;
 import javafx.scene.control.RadioButton;
 import javax.swing.JOptionPane;
-import javax.swing.text.MaskFormatter;
 import net.proteanit.sql.DbUtils;
-
 
 /**
  *
  * @author pauloviniciusbarbosacorazza
  */
 public class ServiceOrderScreen extends javax.swing.JInternalFrame {
-    
-    Connection  conexao = null;
+
+    Connection conexao = null;
     PreparedStatement pst = null;
     ResultSet rs = null;
     //radio button
-    
+
     private String tipo;
-    MaskFormatter maskData = new MaskFormatter("R$");
-    
-    
+    //private String status;
 
     /**
      * Creates new form ServiceOrderScreen
@@ -36,46 +33,45 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         initComponents();
         conexao = DatabaseConnection.conector();
     }
-    
-    private void searchClient(){
-         String sql = "select id_cliente as ID,cliente_nome as NOME, cliente_fone as FONE from tb_clientes where cliente_nome like ?";
-         try {
+
+    private void searchClient() {
+        String sql = "select id_cliente as ID,cliente_nome as NOME, cliente_fone as FONE from tb_clientes where cliente_nome like ?";
+        try {
             pst = conexao.prepareStatement(sql);
-            pst.setString(1,txtClientSearch.getText() + "%");
+            pst.setString(1, txtClientSearch.getText() + "%");
             rs = pst.executeQuery();
             tblClients.setModel(DbUtils.resultSetToTableModel(rs));
-            
+
         } catch (Exception e) {
-             JOptionPane.showMessageDialog(null, "Erro: " + e);
+            JOptionPane.showMessageDialog(null, "Erro: " + e);
         }
-    
+
     }
-    
-    private void setFieldsFromTable(){
+
+    private void setFieldsFromTable() {
         int set = tblClients.getSelectedRow();
-        txtIdClient.setText(tblClients.getModel().getValueAt(set,0).toString());
-        
+        txtIdClient.setText(tblClients.getModel().getValueAt(set, 0).toString());
+
     }
-    
-    private void createrServiceOrder(){
+
+    private void createrServiceOrder() {
         String sql = "insert into tb_os (tipo,status,os_equipamento,os_defeito,os_servico,os_tecnico,os_valor,id_cliente) values (?,?,?,?,?,?,?,?)";
         try {
             pst = conexao.prepareCall(sql);
-            pst.setString(1,tipo);
-            pst.setString(2,situationCombo.getSelectedItem().toString());
-            pst.setString(3,txtEquipmentName.getText());
-            pst.setString(4,txtIssueName.getText());
+            pst.setString(1, tipo);
+            pst.setString(2, situationCombo.getSelectedItem().toString());
+            pst.setString(3, txtEquipmentName.getText());
+            pst.setString(4, txtIssueName.getText());
             pst.setString(5, txtServiceName.getText());
             pst.setString(6, txtTechnicianName.getText());
-            pst.setString(7, txtOsValue.getText());
-            pst.setString(8,txtIdClient.getText());
-            
-            if(txtIdClient.getText().isEmpty() || txtEquipmentName.getText().isEmpty() || txtIssueName.getText().isEmpty()){
+            pst.setString(7, txtOsValue.getText().replace(",", "."));
+            pst.setString(8, txtIdClient.getText());
+
+            if (txtIdClient.getText().isEmpty() || txtEquipmentName.getText().isEmpty() || txtIssueName.getText().isEmpty()) {
                 JOptionPane.showMessageDialog(null, "Preencha todos os campos obrigatorios !");
-            }
-            else{
+            } else {
                 int addedServiceOrder = pst.executeUpdate();
-                if(addedServiceOrder > 0 ){
+                if (addedServiceOrder > 0) {
                     JOptionPane.showMessageDialog(null, "Ordem de servico emitida com sucesso !");
                     txtIdClient.setText(null);
                     txtEquipmentName.setText(null);
@@ -85,11 +81,50 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                     txtOsValue.setText(null);
                 }
             }
-            
+
         } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Erro : " + e);
         }
     }
+
+    public void readServiceOrder() {
+        String serviceOrder;
+        serviceOrder = JOptionPane.showInputDialog("Informe o número da Ordem de Serviço:");
+        String sql = "select * from tb_os where id_os=" + serviceOrder;
+        try {
+            pst = conexao.prepareStatement(sql);
+            rs = pst.executeQuery();
+            if (rs.next()) {
+                txtServiceOrder.setText(rs.getString(1));
+                txtServiceOrderDate.setText(rs.getString(2));
+                String radioSelected = rs.getString(3);
+                if (radioSelected.equals("Ordem de Serviço")) {
+                    serviceOrderRadio.setSelected(true);
+                    tipo = "Ordem de Serviço";
+
+                } else {
+                    tenderRadio.setSelected(true);
+                    tipo = "Orçamento";
+                    situationCombo.setSelectedIndex(1);
+
+                }
+                situationCombo.setSelectedItem(rs.getString(4));
+                txtEquipmentName.setText(rs.getString(5));
+                txtIssueName.setText(rs.getString(6));
+                txtServiceName.setText(rs.getString(7));
+                txtTechnicianName.setText(rs.getString(8));
+                txtOsValue.setText(rs.getString(9));
+
+            } else {
+                JOptionPane.showMessageDialog(null, "Ordem de serviço não cadastrada!");
+            }
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(null, "Erro: " + e);
+        }
+
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -102,9 +137,9 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
+        txtServiceOrder = new javax.swing.JTextField();
         jLabel2 = new javax.swing.JLabel();
-        jTextField2 = new javax.swing.JTextField();
+        txtServiceOrderDate = new javax.swing.JTextField();
         serviceOrderRadio = new javax.swing.JRadioButton();
         tenderRadio = new javax.swing.JRadioButton();
         jLabel3 = new javax.swing.JLabel();
@@ -116,8 +151,8 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblClients = new javax.swing.JTable();
         btnCreateServiceOrder = new javax.swing.JButton();
-        btnReadServiceOrder = new javax.swing.JButton();
         btnUpdateServiceOrder = new javax.swing.JButton();
+        btnReadServiceOrder = new javax.swing.JButton();
         btnDeleteServiceOrder = new javax.swing.JButton();
         btnPrintServiceOrder = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
@@ -159,11 +194,12 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
 
         jLabel1.setText("N* OS:");
 
-        jTextField1.setEditable(false);
+        txtServiceOrder.setEditable(false);
+        txtServiceOrder.setEnabled(false);
 
         jLabel2.setText("Data:");
 
-        jTextField2.setEditable(false);
+        txtServiceOrderDate.setEditable(false);
 
         buttonGroup1.add(serviceOrderRadio);
         serviceOrderRadio.setText("Ordem de serviço");
@@ -191,17 +227,17 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                         .addGap(15, 15, 15)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel1)
-                            .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 64, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(56, 56, 56)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel2)))
+                            .addComponent(jLabel2)
+                            .addComponent(txtServiceOrderDate, javax.swing.GroupLayout.DEFAULT_SIZE, 145, Short.MAX_VALUE)))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addContainerGap()
                         .addComponent(serviceOrderRadio)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(tenderRadio)))
-                .addContainerGap(21, Short.MAX_VALUE))
+                .addContainerGap())
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -212,8 +248,8 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                     .addComponent(jLabel2))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(txtServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtServiceOrderDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(tenderRadio)
@@ -223,7 +259,8 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Situação:");
 
-        situationCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Na bancada", "Entrega OK", "Orçamento Reprovado", "Aguardando Peças", "Abandonado pelo Cliente", "Retornou", "Aguardando Retirada" }));
+        situationCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Orçamento", "Na bancada", "Entrega OK", "Orçamento Reprovado", "Aguardando Peças", "Abandonado pelo Cliente", "Retornou", "Aguardando Retirada" }));
+        situationCombo.setToolTipText("Status ");
 
         clientPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Clientes"));
 
@@ -259,17 +296,16 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         clientPanel.setLayout(clientPanelLayout);
         clientPanelLayout.setHorizontalGroup(
             clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(clientPanelLayout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clientPanelLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addGroup(clientPanelLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, clientPanelLayout.createSequentialGroup()
                         .addComponent(txtClientSearch, javax.swing.GroupLayout.PREFERRED_SIZE, 222, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addComponent(jLabel5)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtIdClient, javax.swing.GroupLayout.DEFAULT_SIZE, 86, Short.MAX_VALUE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(txtIdClient, javax.swing.GroupLayout.PREFERRED_SIZE, 86, javax.swing.GroupLayout.PREFERRED_SIZE))))
         );
         clientPanelLayout.setVerticalGroup(
             clientPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -279,7 +315,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                     .addComponent(txtClientSearch, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jLabel5)
                     .addComponent(txtIdClient, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 11, Short.MAX_VALUE)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -294,20 +330,20 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
             }
         });
 
-        btnReadServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/read.png"))); // NOI18N
-        btnReadServiceOrder.setToolTipText("Consultar Ordem de Serviço");
-        btnReadServiceOrder.setPreferredSize(new java.awt.Dimension(80, 80));
-        btnReadServiceOrder.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnReadServiceOrderActionPerformed(evt);
-            }
-        });
-
         btnUpdateServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/update.png"))); // NOI18N
         btnUpdateServiceOrder.setToolTipText("Editar Ordem de Serviço");
+        btnUpdateServiceOrder.setPreferredSize(new java.awt.Dimension(80, 80));
         btnUpdateServiceOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnUpdateServiceOrderActionPerformed(evt);
+            }
+        });
+
+        btnReadServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/read.png"))); // NOI18N
+        btnReadServiceOrder.setToolTipText("Consultar Ordem de Serviço");
+        btnReadServiceOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnReadServiceOrderActionPerformed(evt);
             }
         });
 
@@ -334,76 +370,76 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
 
         jLabel9.setText("Valor Total:");
 
+        txtOsValue.setText("0");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(layout.createSequentialGroup()
-                .addContainerGap()
-                .addComponent(jLabel11)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addGap(21, 21, 21)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
-                        .addContainerGap(26, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(jLabel3)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(situationCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(clientPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel4)
+                            .addComponent(jLabel6)
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(7, 7, 7)
+                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(jLabel7)
+                                    .addComponent(jLabel8))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(txtTechnicianName, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel9)
+                                .addGap(18, 18, 18)
+                                .addComponent(txtOsValue, javax.swing.GroupLayout.DEFAULT_SIZE, 303, Short.MAX_VALUE))
+                            .addComponent(txtServiceName)
+                            .addComponent(txtIssueName)
+                            .addComponent(txtEquipmentName))))
+                .addGap(18, 18, 18))
+            .addGroup(layout.createSequentialGroup()
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel11))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(25, 25, 25)
                         .addComponent(btnCreateServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 135, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnUpdateServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnReadServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnReadServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnUpdateServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 131, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnDeleteServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnPrintServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(28, 28, 28))
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, layout.createSequentialGroup()
-                        .addGap(21, 21, 21)
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(jLabel3)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(situationCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                                    .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(18, 18, 18)
-                                .addComponent(clientPanel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel4)
-                                    .addComponent(jLabel6)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addGap(7, 7, 7)
-                                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addComponent(jLabel7)
-                                            .addComponent(jLabel8))))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(layout.createSequentialGroup()
-                                        .addComponent(txtTechnicianName, javax.swing.GroupLayout.PREFERRED_SIZE, 179, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(jLabel9)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(txtOsValue))
-                                    .addComponent(txtServiceName)
-                                    .addComponent(txtIssueName)
-                                    .addComponent(txtEquipmentName))))
-                        .addGap(18, 18, 18)))
-                .addContainerGap())
+                        .addComponent(btnPrintServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(39, 39, 39)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(clientPanel, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGap(15, 15, 15)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(23, 23, 23)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel3)
-                            .addComponent(situationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addGap(24, 24, 24)
+                            .addComponent(situationCombo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addComponent(clientPanel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(jLabel4)
                     .addComponent(txtEquipmentName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
@@ -422,16 +458,16 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                         .addComponent(txtOsValue, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(txtTechnicianName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jLabel8))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 21, Short.MAX_VALUE)
+                .addGap(18, 18, 18)
                 .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addComponent(btnUpdateServiceOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnReadServiceOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(btnUpdateServiceOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnCreateServiceOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnDeleteServiceOrder, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(btnPrintServiceOrder, javax.swing.GroupLayout.PREFERRED_SIZE, 144, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(18, 18, 18))
+                .addContainerGap(51, Short.MAX_VALUE))
         );
 
         setBounds(0, 0, 729, 622);
@@ -442,15 +478,15 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         createrServiceOrder();
     }//GEN-LAST:event_btnCreateServiceOrderActionPerformed
 
-    private void btnReadServiceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadServiceOrderActionPerformed
-        // TODO add your handling code here:
-        //readUser();
-    }//GEN-LAST:event_btnReadServiceOrderActionPerformed
-
     private void btnUpdateServiceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUpdateServiceOrderActionPerformed
         // TODO add your handling code here:
-      // updateUser();
+        //readUser();
     }//GEN-LAST:event_btnUpdateServiceOrderActionPerformed
+
+    private void btnReadServiceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnReadServiceOrderActionPerformed
+        // TODO add your handling code here:
+        readServiceOrder();
+    }//GEN-LAST:event_btnReadServiceOrderActionPerformed
 
     private void btnDeleteServiceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteServiceOrderActionPerformed
         // TODO add your handling code here:
@@ -469,7 +505,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
     private void serviceOrderRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_serviceOrderRadioActionPerformed
         // TODO add your handling code here:
         tipo = "Ordem de Serviço";
-        
+
     }//GEN-LAST:event_serviceOrderRadioActionPerformed
 
     private void tenderRadioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tenderRadioActionPerformed
@@ -505,8 +541,6 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
     private javax.swing.JRadioButton serviceOrderRadio;
     private javax.swing.JComboBox<String> situationCombo;
     private javax.swing.JTable tblClients;
@@ -517,6 +551,8 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtIssueName;
     private javax.swing.JTextField txtOsValue;
     private javax.swing.JTextField txtServiceName;
+    private javax.swing.JTextField txtServiceOrder;
+    private javax.swing.JTextField txtServiceOrderDate;
     private javax.swing.JTextField txtTechnicianName;
     // End of variables declaration//GEN-END:variables
 }
