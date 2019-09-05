@@ -106,5 +106,7 @@ alter table db_order_service.tb_os add tipo varchar(15) not null after os_data;
 alter table db_order_service.tb_os add status varchar(20) not null after tipo
 ALTER TABLE db_order_service.tb_os MODIFY tipo varchar(30);
 
-	select * from db_order_service.tb_os
+	use db_order_service
+	DESCRIBE db_order_service.tb_os
+		select * from db_order_service.tb_os
 
