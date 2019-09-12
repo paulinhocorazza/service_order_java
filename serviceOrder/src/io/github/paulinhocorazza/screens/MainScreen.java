@@ -5,9 +5,14 @@
  */
 package io.github.paulinhocorazza.screens;
 
+import io.github.paulinhocorazza.dal.DatabaseConnection;
+import java.sql.*;
 import java.text.DateFormat;
 import java.util.Date;
 import javax.swing.JOptionPane;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -15,11 +20,16 @@ import javax.swing.JOptionPane;
  */
 public class MainScreen extends javax.swing.JFrame {
 
+    Connection conexao = null;
+
     /**
      * Creates new form MainScreen
      */
     public MainScreen() {
         initComponents();
+
+        conexao = DatabaseConnection.conector();
+
     }
 
     /**
@@ -42,6 +52,7 @@ public class MainScreen extends javax.swing.JFrame {
         menuCadUsuario = new javax.swing.JMenuItem();
         menuReport = new javax.swing.JMenu();
         menuServices = new javax.swing.JMenuItem();
+        menuCustomers = new javax.swing.JMenuItem();
         menuOptions = new javax.swing.JMenu();
         menuOut = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
@@ -111,6 +122,15 @@ public class MainScreen extends javax.swing.JFrame {
         menuServices.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, 0));
         menuServices.setText("Serviços");
         menuReport.add(menuServices);
+
+        menuCustomers.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, 0));
+        menuCustomers.setText("Clientes");
+        menuCustomers.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuCustomersActionPerformed(evt);
+            }
+        });
+        menuReport.add(menuCustomers);
 
         Menu.add(menuReport);
 
@@ -207,22 +227,38 @@ public class MainScreen extends javax.swing.JFrame {
     private void menuOutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuOutActionPerformed
         // codiog para poder sair
         int sair = JOptionPane.showConfirmDialog(null, "Tem certeza que deseja sair ?", "Atencao", JOptionPane.YES_NO_OPTION);
-        
-        if (sair == JOptionPane.YES_OPTION){
+
+        if (sair == JOptionPane.YES_OPTION) {
             System.exit(0);
         }
-      
+
     }//GEN-LAST:event_menuOutActionPerformed
 
     private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
         //linhas abaixas substituem a label data para a data do sistema
-        
+
         Date data = new Date();
         DateFormat dataFormatada = DateFormat.getDateInstance(DateFormat.SHORT);
         lblData.setText("Data: " + dataFormatada.format(data));
-        
-        
+
+
     }//GEN-LAST:event_formWindowActivated
+
+    private void menuCustomersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuCustomersActionPerformed
+        // TODO add your handling code here:
+        int accept = JOptionPane.showConfirmDialog(null, "Imprimir relatorio de clientes", "Atencao", JOptionPane.YES_NO_OPTION);
+
+        if (accept == JOptionPane.YES_OPTION) {
+            try {
+                JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/clientes.jasper", null, conexao);
+                JasperViewer.viewReport(print, false);
+            } catch (Exception e) {
+                JOptionPane.showConfirmDialog(null, e);
+            }
+
+        }
+
+    }//GEN-LAST:event_menuCustomersActionPerformed
 
     /**
      * @param args the command line arguments
@@ -270,6 +306,7 @@ public class MainScreen extends javax.swing.JFrame {
     private javax.swing.JMenuItem menuCadOs;
     public static javax.swing.JMenuItem menuCadUsuario;
     private javax.swing.JMenu menuCadastro;
+    private javax.swing.JMenuItem menuCustomers;
     private javax.swing.JMenu menuHelp;
     private javax.swing.JMenu menuOptions;
     private javax.swing.JMenuItem menuOut;

@@ -7,8 +7,6 @@ package io.github.paulinhocorazza.screens;
 
 import java.sql.*;
 import io.github.paulinhocorazza.dal.DatabaseConnection;
-import java.util.Locale;
-import javafx.scene.control.RadioButton;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
 

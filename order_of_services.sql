@@ -1,3 +1,5 @@
+alter user 'root'@'localhost' IDENTIFIED WITH mysql_native_password by 'senha'
+
 create schema db_order_service
 
 USE db_order_service;
@@ -99,7 +101,7 @@ SELECT * from tb_usuarios
 drop table tb_usuarios
 
 ALTER TABLE tb_usuarios MODIFY login varchar(30);
-
+alter table db_order_service.tb_os MODIFY status varchar(30)
 
 describe db_order_service.tb_os
 alter table db_order_service.tb_os add tipo varchar(15) not null after os_data;
@@ -109,4 +111,6 @@ ALTER TABLE db_order_service.tb_os MODIFY tipo varchar(30);
 	use db_order_service
 	DESCRIBE db_order_service.tb_os
 		select * from db_order_service.tb_os
+		
+select * from db_order_service.tb_clientes order BY cliente_nome
 
