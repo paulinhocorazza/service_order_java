@@ -7,8 +7,12 @@ package io.github.paulinhocorazza.screens;
 
 import java.sql.*;
 import io.github.paulinhocorazza.dal.DatabaseConnection;
+import java.util.HashMap;
 import javax.swing.JOptionPane;
 import net.proteanit.sql.DbUtils;
+import net.sf.jasperreports.engine.JasperFillManager;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.view.JasperViewer;
 
 /**
  *
@@ -198,6 +202,20 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         }
 
     }
+    
+    private void printServiceOrder(){
+        int accept = JOptionPane.showConfirmDialog(null,"Imprimir Ordem de Serviço ?", "Atenção", JOptionPane.YES_NO_OPTION);
+        if (accept == JOptionPane.YES_OPTION){
+            try{
+                HashMap filter = new HashMap();
+                filter.put("os", Integer.parseInt(txtServiceOrder.getText()));
+                JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/Ordem.jasper", filter, conexao);
+                JasperViewer.viewReport(print, false);
+            } catch (Exception e){
+                JOptionPane.showMessageDialog(null, e);
+            }
+        }
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -217,7 +235,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         serviceOrderRadio = new javax.swing.JRadioButton();
         tenderRadio = new javax.swing.JRadioButton();
         jLabel3 = new javax.swing.JLabel();
-        situationCombo = new javax.swing.JComboBox<>();
+        situationCombo = new javax.swing.JComboBox<String>();
         clientPanel = new javax.swing.JPanel();
         txtClientSearch = new javax.swing.JTextField();
         jLabel5 = new javax.swing.JLabel();
@@ -333,7 +351,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
 
         jLabel3.setText("Situação:");
 
-        situationCombo.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Orçamento", "Na bancada", "Entrega OK", "Orçamento Reprovado", "Aguardando Peças", "Abandonado pelo Cliente", "Retornou", "Aguardando Retirada" }));
+        situationCombo.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Orçamento", "Na bancada", "Entrega OK", "Orçamento Reprovado", "Aguardando Peças", "Abandonado pelo Cliente", "Retornou", "Aguardando Retirada" }));
         situationCombo.setToolTipText("Status ");
 
         clientPanel.setBorder(javax.swing.BorderFactory.createTitledBorder("Clientes"));
@@ -431,6 +449,11 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         });
 
         btnPrintServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/iconfinder_printer_39263.png"))); // NOI18N
+        btnPrintServiceOrder.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPrintServiceOrderActionPerformed(evt);
+            }
+        });
 
         jLabel4.setText("*Equipamento:");
 
@@ -462,7 +485,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                                 .addComponent(situationCombo, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                             .addComponent(jPanel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(18, 18, 18)
-                        .addComponent(clientPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE))
+                        .addComponent(clientPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 360, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4)
@@ -595,6 +618,11 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
         tenderRadio.setSelected(true);
         tipo = "Orçamento";
     }//GEN-LAST:event_formInternalFrameOpened
+
+    private void btnPrintServiceOrderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPrintServiceOrderActionPerformed
+        // TODO add your handling code here:
+        printServiceOrder();
+    }//GEN-LAST:event_btnPrintServiceOrderActionPerformed
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

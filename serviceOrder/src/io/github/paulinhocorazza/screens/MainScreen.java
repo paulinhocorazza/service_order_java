@@ -121,6 +121,11 @@ public class MainScreen extends javax.swing.JFrame {
 
         menuServices.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, 0));
         menuServices.setText("Serviços");
+        menuServices.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuServicesActionPerformed(evt);
+            }
+        });
         menuReport.add(menuServices);
 
         menuCustomers.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_X, 0));
@@ -259,6 +264,22 @@ public class MainScreen extends javax.swing.JFrame {
         }
 
     }//GEN-LAST:event_menuCustomersActionPerformed
+
+    private void menuServicesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuServicesActionPerformed
+        // TODO add your handling code here:
+        int accept = JOptionPane.showConfirmDialog(null, "Imprimir relatorio de Ordens de Serviços  ?", "Atenção", JOptionPane.YES_NO_OPTION);
+
+        if (accept == JOptionPane.YES_OPTION) {
+            try {
+                JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/servicos.jasper", null, conexao);
+                JasperViewer.viewReport(print, false);
+            } catch (Exception e) {
+                JOptionPane.showConfirmDialog(null, e);
+            }
+
+        }
+
+    }//GEN-LAST:event_menuServicesActionPerformed
 
     /**
      * @param args the command line arguments
