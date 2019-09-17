@@ -14,9 +14,9 @@ public class DatabaseConnection {
         java.sql.Connection conexao = null;
         //linha abaixo chama o driver
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/db_order_service";
+        String url = "jdbc:mysql://localhost:3306/db_order_service?autoReconnect=true&useSSL=false";
         String user = "root";
-        String password = "password";
+        String password = "";
         //fazendo a conexao
 
         try {
@@ -25,7 +25,7 @@ public class DatabaseConnection {
             System.out.println(conexao);
             return conexao;
 
-        } catch (Exception e) {
+        } catch (ClassNotFoundException | SQLException e) {
             //tratativa de erro
             System.out.println(e);
            

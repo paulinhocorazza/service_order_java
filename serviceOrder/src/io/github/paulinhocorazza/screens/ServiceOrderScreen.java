@@ -128,13 +128,10 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
                 JOptionPane.showMessageDialog(null, "Ordem de serviço não cadastrada!");
             }
 
-        } catch (com.mysql.jdbc.exceptions.jdbc4.MySQLSyntaxErrorException e) {
+        } catch (Exception e) {
             JOptionPane.showMessageDialog(null, "Ordem der Serviço Inválida, digite apenas números! ");
             System.out.println(e);
-        } catch (Exception erro) {
-            JOptionPane.showMessageDialog(null, "Erro: " + erro);
-        }
-
+        } 
     }
 
     public void updateServiceOrder() {
@@ -209,7 +206,9 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
             try{
                 HashMap filter = new HashMap();
                 filter.put("os", Integer.parseInt(txtServiceOrder.getText()));
-                JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/Ordem.jasper", filter, conexao);
+                //windows
+                JasperPrint print = JasperFillManager.fillReport("C:/reports/Ordem.jasper", null, conexao);
+                //JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/Ordem.jasper", filter, conexao);
                 JasperViewer.viewReport(print, false);
             } catch (Exception e){
                 JOptionPane.showMessageDialog(null, e);
@@ -448,7 +447,7 @@ public class ServiceOrderScreen extends javax.swing.JInternalFrame {
             }
         });
 
-        btnPrintServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/iconfinder_printer_39263.png"))); // NOI18N
+        btnPrintServiceOrder.setIcon(new javax.swing.ImageIcon(getClass().getResource("/io/github/paulinhocorazza/icons/print.png"))); // NOI18N
         btnPrintServiceOrder.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnPrintServiceOrderActionPerformed(evt);

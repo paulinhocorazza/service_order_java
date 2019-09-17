@@ -255,7 +255,9 @@ public class MainScreen extends javax.swing.JFrame {
 
         if (accept == JOptionPane.YES_OPTION) {
             try {
-                JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/clientes.jasper", null, conexao);
+                //para rodar no windows
+                JasperPrint print = JasperFillManager.fillReport("C:/reports/clientes.jasper", null, conexao);
+                //JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/clientes.jasper", null, conexao);
                 JasperViewer.viewReport(print, false);
             } catch (Exception e) {
                 JOptionPane.showConfirmDialog(null, e);
@@ -271,7 +273,8 @@ public class MainScreen extends javax.swing.JFrame {
 
         if (accept == JOptionPane.YES_OPTION) {
             try {
-                JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/servicos.jasper", null, conexao);
+                JasperPrint print = JasperFillManager.fillReport("C:/reports/servicos.jasper", null, conexao);
+               // JasperPrint print = JasperFillManager.fillReport("/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/reports/servicos.jasper", null, conexao);
                 JasperViewer.viewReport(print, false);
             } catch (Exception e) {
                 JOptionPane.showConfirmDialog(null, e);

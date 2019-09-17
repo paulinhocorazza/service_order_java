@@ -45,10 +45,6 @@
 	</background>
 	<title>
 		<band height="69" splitType="Stretch">
-			<image>
-				<reportElement x="0" y="0" width="188" height="49" uuid="825ea238-6389-4443-a72f-f1edd28c9211"/>
-				<imageExpression><![CDATA["/Users/pauloviniciusbarbosacorazza/Pictures/Screenshots/Screen Shot 2019-09-14 at 14.28.54.png"]]></imageExpression>
-			</image>
 			<textField pattern="dd/MM/yy">
 				<reportElement x="455" y="29" width="100" height="20" uuid="07413c67-1ba6-4c06-ad14-c89fe64bcfbc"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
@@ -67,6 +63,10 @@
 				</textElement>
 				<textFieldExpression><![CDATA[$F{id_os}]]></textFieldExpression>
 			</textField>
+			<image>
+				<reportElement x="0" y="0" width="188" height="59" uuid="ca203085-dd58-4ca2-b3b5-acbc24ebd8a8"/>
+				<imageExpression><![CDATA["/Users/pauloviniciusbarbosacorazza/Documents/dev/service_order_java/assets/carmel.png"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>
@@ -87,8 +87,8 @@
 				<text><![CDATA[status]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="330" y="0" width="100" height="20" uuid="a6c2ec04-ce16-4a50-aef0-a394c7fc2bf4"/>
-				<text><![CDATA[os_equipamento]]></text>
+				<reportElement x="319" y="0" width="100" height="20" uuid="a6c2ec04-ce16-4a50-aef0-a394c7fc2bf4"/>
+				<text><![CDATA[equipamento]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="455" y="0" width="100" height="20" uuid="d3bcb499-c49a-484d-9f48-3977eb348538"/>
@@ -111,7 +111,7 @@
 				<textFieldExpression><![CDATA[$F{status}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="330" y="0" width="100" height="20" uuid="64dfc824-3d40-403c-b587-0ef6eb1f4b6f"/>
+				<reportElement x="319" y="0" width="100" height="20" uuid="64dfc824-3d40-403c-b587-0ef6eb1f4b6f"/>
 				<textFieldExpression><![CDATA[$F{os_equipamento}]]></textFieldExpression>
 			</textField>
 			<textField>

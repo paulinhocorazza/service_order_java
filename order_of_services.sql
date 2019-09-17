@@ -114,3 +114,10 @@ ALTER TABLE db_order_service.tb_os MODIFY tipo varchar(30);
 		
 select * from db_order_service.tb_clientes order BY cliente_nome
 
+select
+service_order.id_os,os_data,tipo,status,os_equipamento,os_valor,
+customer.cliente_nome,cliente_fone from tb_os as service_order inner join tb_clientes as customer
+on (customer.id_cliente = service_order.id_cliente);
+
+
+
